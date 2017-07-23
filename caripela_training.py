@@ -14,34 +14,48 @@ env['LD_PRELOAD'] = '/usr/lib/arm-linux-gnueabihf/libv4l/v4l2convert.so'
 #recognizer = cv2.createLBPHFaceRecognizer()
 
 
-def entrenar():
+def menu():
+	
+	global opciones
 	
 	opciones = {}
-	opciones['n'] = '(n) Nuevo rostro'
-	
-	(imagenes, etiquetas, nombres, id) = ([], [], {}, 0)
+	(nombres, id) = ({}, 0)
 	with open('conocidos.csv','r') as csv_nombres:
 		for renglon in csv_nombres:
 			etiqueta,nombre = renglon.split(',')
-			opciones[int(etiqueta)] = "(" + str(etiqueta) + ") " + nombre
-			#id = int(etiqueta) + 1
-
-	print opciones
-	opcion = raw_input('Si deseás actualizar el modelo de una persona que ya existía, seleccioná la opción con su nombre.\n Si es una persona desconocida, presioná n para entrenar el modelo.\n')
+			nombre = str.replace(nombre, "\"", "")
+			nombre = str.strip(nombre)
+			opciones[int(etiqueta)] = nombre
+			
+	opciones['n'] = "Nuevo rostro"
+	
+	texto_opciones = "\n\nSi deseás actualizar el modelo de una persona que ya existía, seleccioná la opción con su nombre.\nSi es una persona desconocida, presioná n para entrenar el modelo: \n\n"
+	
+	for id, texto in opciones.iteritems():
+		texto_opciones = texto_opciones + "(" + str(id) + ") " + texto + "\n"
+		
+	opcion = raw_input(texto_opciones)
 	if opcion == 'n':
 		nombre = raw_input('\nIngresá el nombre de la persona y presioná <Enter>: ')
 		id = int(etiqueta) + 1
-	else:
+		return id, nombre
+	elif int(opcion) in opciones:
 		nombre = opciones[int(opcion)]
 		id = int(opcion)
+		return id, nombre
+	else:
+		print u"Opción no válida."
+		exit()
+		
+		
+
+def entrenar():
 	
-	print nombre,id
+	global opciones
 	
+	(imagenes, etiquetas, nombres, id) = ([], [], {}, 0)
 	BASE_PATH = "Caras/"
 	SEPARATOR=";"
-	#nombre = raw_input('\nIngrese el nombre de la persona y presione <Enter>: ')	
-	#nombres[id] = nombre
-	#etiqueta = id
 	
 	# Creamos el directorio donde se moveran las imágenes, 
 	# el nombre del directorio es el id de la persona
@@ -61,25 +75,34 @@ def entrenar():
 			#print "%s%s%d" % (ruta, SEPARATOR, etiqueta)
 			if os.path.exists(ruta):
 				imagenes.append(cv2.imread(ruta, 0))
-				etiquetas.append(int(etiqueta))
+				etiquetas.append(int(id))
 				#os.rename(ruta, directorio+"/"+foto)
 				os.remove(ruta)
 				
 	(imagenes, etiquetas) = [np.array(lista) for lista in [imagenes, etiquetas]]
 	if len(imagenes) > 0:
+	
+	
+		(id, nombre) = menu()
+		
+	
 		modelo = cv2.createLBPHFaceRecognizer()
 		archivo_modelo = 'conocidos.xml'
 		if os.path.exists(archivo_modelo):
 			modelo.load(archivo_modelo)
 			modelo.update(imagenes, etiquetas)
-			print 'Actualizando el modelo...'
+			print u'Actualizando el modelo...'
 		else:
 			modelo.train(imagenes, etiquetas)
-			print 'Creando un nuevo modelo...'
+			print u'Creando un nuevo modelo...'
 		modelo.save(archivo_modelo)
-		csv_nombres = open('conocidos.csv', 'a+')
-		csv_nombres.write(str(id)+', "'+nombre+'"\n')
-		csv_nombres.close()
+		if int(id) not in opciones:
+			csv_nombres = open('conocidos.csv', 'a+')
+			csv_nombres.write(str(id)+', "'+nombre+'"\n')
+			csv_nombres.close()
+			print u'Entrenando una nueva cara...'
+		else:
+			print u'Actualizando una cara existente...'
 		
 		# Luego de entrenar al algoritmo, eliminamos las imágenes
 		for carpeta, subcarpetas, fotos in os.walk(BASE_PATH):
@@ -88,20 +111,9 @@ def entrenar():
 				os.remove(ruta)
 				
 	else:
-		print u"No hay imágenes disponibles para realizar el entrenamiento."
+		print u"\n\nNo hay imágenes disponibles para realizar el entrenamiento.\n\n"
 	exit()
 
 
-"""def inicio():
-	opcion = raw_input('\nPresione (t: entrenar): ')
-	if opcion == 't':
-		entrenar()
-	else:
-		inicio()
-	return
-
-
-inicio()
-"""
 entrenar()
 
