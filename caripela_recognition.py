@@ -14,7 +14,7 @@ env['LD_PRELOAD'] = '/usr/lib/arm-linux-gnueabihf/libv4l/v4l2convert.so'
 ###-------------------------------------------------###
 ###							CONFIGURACIONES											###
 ###-------------------------------------------------###
-windows = False;						# Está corriendo en windows?
+windows = True						# Está corriendo en windows?
 cantidad_fotos = 20					# Cantidad de fotos que se le tomarán a los desconocidos
 intervalo = 10							# Intervalo de tiempo para tomar cada foto (frames por segundo)
 fotos_tomadas = 0						# Contador de fotos capturadas
@@ -130,7 +130,7 @@ def buscarCaras(imagen):
 Función que presenta el menú en pantalla para iniciar el reconocimiento
 """
 def inicio():
-	opcion = raw_input('\nParese frente a la camara y presione (r: reconococer rostro), \nAl finalizar presione (q: Salir del programa):')
+	opcion = raw_input('\nParate frente a la cámara y presioná (r: reconococer rostro), \nAl finalizar presioná (q: Salir del programa):')
 	"""
 	Si el usuario presionó la letra r, salimos de la función para que el programa 
 	continúe y entre en el bucle (while) principal. Si es otra letra, la función
@@ -152,7 +152,7 @@ inicio()
 camara = WebcamVideoStream(src=camIndex).start()
 sleep(1)
 # Mientras el programa está corriendo, mostramos en pantalla la opción de salir
-print '\nAl finalizar presione (q: Salir del programa).'
+print '\nAl finalizar presioná (q: Salir del programa).'
 
 """
 Bucle principal. Si pudimos capturar la cámara, procesamos cada cuadro en 

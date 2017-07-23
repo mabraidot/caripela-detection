@@ -16,19 +16,32 @@ env['LD_PRELOAD'] = '/usr/lib/arm-linux-gnueabihf/libv4l/v4l2convert.so'
 
 def entrenar():
 	
+	opciones = {}
+	opciones['n'] = '(n) Nuevo rostro'
+	
 	(imagenes, etiquetas, nombres, id) = ([], [], {}, 0)
 	with open('conocidos.csv','r') as csv_nombres:
 		for renglon in csv_nombres:
 			etiqueta,nombre = renglon.split(',')
-			#nombres[int(etiqueta)] = str(nombre).rstrip('\n').strip().strip('"')
-			id = int(etiqueta)+1
+			opciones[int(etiqueta)] = "(" + str(etiqueta) + ") " + nombre
+			#id = int(etiqueta) + 1
 
+	print opciones
+	opcion = raw_input('Si deseás actualizar el modelo de una persona que ya existía, seleccioná la opción con su nombre.\n Si es una persona desconocida, presioná n para entrenar el modelo.\n')
+	if opcion == 'n':
+		nombre = raw_input('\nIngresá el nombre de la persona y presioná <Enter>: ')
+		id = int(etiqueta) + 1
+	else:
+		nombre = opciones[int(opcion)]
+		id = int(opcion)
 	
-	nombre = raw_input('\nIngrese el nombre de la persona y presione <Enter>: ')	
+	print nombre,id
+	
 	BASE_PATH = "Caras/"
 	SEPARATOR=";"
-	nombres[id] = nombre
-	etiqueta = id
+	#nombre = raw_input('\nIngrese el nombre de la persona y presione <Enter>: ')	
+	#nombres[id] = nombre
+	#etiqueta = id
 	
 	# Creamos el directorio donde se moveran las imágenes, 
 	# el nombre del directorio es el id de la persona
