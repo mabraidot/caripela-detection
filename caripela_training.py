@@ -16,63 +16,63 @@ env['LD_PRELOAD'] = '/usr/lib/arm-linux-gnueabihf/libv4l/v4l2convert.so'
 
 def entrenar():
 	
-	(images, labels, names, id) = ([], [], {}, 0)
-	with open('conocidos.csv','r') as f:
-		for line in f:
-			label,name = line.split(',')
-			#names[int(label)] = str(name).rstrip('\n').strip().strip('"')
-			id = int(label)+1
+	(imagenes, etiquetas, nombres, id) = ([], [], {}, 0)
+	with open('conocidos.csv','r') as csv_nombres:
+		for renglon in csv_nombres:
+			etiqueta,nombre = renglon.split(',')
+			#nombres[int(etiqueta)] = str(nombre).rstrip('\n').strip().strip('"')
+			id = int(etiqueta)+1
 
 	
 	nombre = raw_input('\nIngrese el nombre de la persona y presione <Enter>: ')	
 	BASE_PATH = "Caras/"
 	SEPARATOR=";"
-	names[id] = nombre
-	label = id
+	nombres[id] = nombre
+	etiqueta = id
 	
 	# Creamos el directorio donde se moveran las imágenes, 
 	# el nombre del directorio es el id de la persona
-	"""directory = BASE_PATH+"/"+str(id)
-	if not os.path.exists(directory):
+	"""directorio = BASE_PATH+"/"+str(id)
+	if not os.path.exists(directorio):
 		try:
-			os.makedirs(directory)
+			os.makedirs(directorio)
 		except OSError as e:
 			if e.errno != errno.EEXIST:
 				raise
 	"""	
 	
-	for dirname, dirnames, filenames in os.walk(BASE_PATH):
-		#for filename in os.listdir(dirname):
-		for filename in filenames:	
-			abs_path = os.path.join(dirname, filename)
-			#print "%s%s%d" % (abs_path, SEPARATOR, label)
-			if os.path.exists(abs_path):
-				images.append(cv2.imread(abs_path, 0))
-				labels.append(int(label))
-				#os.rename(abs_path, directory+"/"+filename)
-				os.remove(abs_path)
+	for carpeta, subcarpetas, fotos in os.walk(BASE_PATH):
+		#for foto in os.listdir(carpeta):
+		for foto in fotos:	
+			ruta = os.path.join(carpeta, foto)
+			#print "%s%s%d" % (ruta, SEPARATOR, etiqueta)
+			if os.path.exists(ruta):
+				imagenes.append(cv2.imread(ruta, 0))
+				etiquetas.append(int(etiqueta))
+				#os.rename(ruta, directorio+"/"+foto)
+				os.remove(ruta)
 				
-	(images, labels) = [np.array(lis) for lis in [images, labels]]
-	if len(images) > 0:
-		model = cv2.createLBPHFaceRecognizer()
-		modelFile = 'conocidos.xml'
-		if os.path.exists(modelFile):
-			model.load(modelFile)
-			model.update(images, labels)
-			print 'actualizando...'
+	(imagenes, etiquetas) = [np.array(lista) for lista in [imagenes, etiquetas]]
+	if len(imagenes) > 0:
+		modelo = cv2.createLBPHFaceRecognizer()
+		archivo_modelo = 'conocidos.xml'
+		if os.path.exists(archivo_modelo):
+			modelo.load(archivo_modelo)
+			modelo.update(imagenes, etiquetas)
+			print 'Actualizando el modelo...'
 		else:
-			model.train(images, labels)
-			print 'actualizando...'
-		model.save(modelFile)
-		f = open('conocidos.csv', 'a+')
-		f.write(str(id)+', "'+nombre+'"\n')
-		f.close()
+			modelo.train(imagenes, etiquetas)
+			print 'Creando un nuevo modelo...'
+		modelo.save(archivo_modelo)
+		csv_nombres = open('conocidos.csv', 'a+')
+		csv_nombres.write(str(id)+', "'+nombre+'"\n')
+		csv_nombres.close()
 		
 		# Luego de entrenar al algoritmo, eliminamos las imágenes
-		for dirname, dirnames, filenames in os.walk(BASE_PATH):
-			for filename in filenames:	
-				abs_path = os.path.join(dirname, filename)
-				os.remove(abs_path)
+		for carpeta, subcarpetas, fotos in os.walk(BASE_PATH):
+			for foto in fotos:	
+				ruta = os.path.join(carpeta, foto)
+				os.remove(ruta)
 				
 	else:
 		print u"No hay imágenes disponibles para realizar el entrenamiento."
