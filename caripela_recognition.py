@@ -1,4 +1,4 @@
-	# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import sys, os
 from time import sleep
 import cv2
@@ -20,7 +20,7 @@ intervalo = 10							# Intervalo de tiempo para tomar cada foto (frames por segu
 fotos_tomadas = 0						# Contador de fotos capturadas
 margen_marco = 25						# Cantidad de píxeles que achicaremos las fotos capturadas
 tiempo_transcurrido = 0			# Contador de tiempo
-humbral_reconocimiento = 55	# Sensibilidad de reconocimiento, menos es más sensible
+humbral_reconocimiento = 45	# Sensibilidad de reconocimiento, menos es más sensible
 ###-------------------------------------------------###
 
 
