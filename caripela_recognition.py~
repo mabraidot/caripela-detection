@@ -93,6 +93,9 @@ def buscarCaras(imagen):
 		flags = cv2.CASCADE_SCALE_IMAGE
 	)
 	
+	ultimo_nombre_conocido = ""
+	cantidad_aciertos_conocidos = 0
+
 	# Por cada cara encontrada vamos a dibujar un recuadro y tratar de identificarlas
 	for (x, y, w, h) in caras:
 		# Solo tomaremos las caras reconocidas que estén cerca de la camara, 
@@ -100,6 +103,12 @@ def buscarCaras(imagen):
 		if h > 250:
 			# Buscamos la cara entre nuestras caras previamente identificadas
 			nombreConocido = esUnaCaraConocida(grices[y+margen_marco:y+h-margen_marco, x+margen_marco:x+w-margen_marco])
+			"""if not nombreConocido:
+				cantidad_aciertos_conocidos -= 1
+			else:
+				cantidad_aciertos_conocidos += 1
+				ultimo_nombre_conocido = nombreConocido
+			if cantidad_aciertos_conocidos < 0:"""
 			if not nombreConocido:
 				# Si no conocemos la cara, tomamos una cantidad parametrizable de fotos cada cierta
 				# cantidad de cuadros y las guardamos en un directorio para realizar el entrenamiento
@@ -113,6 +122,7 @@ def buscarCaras(imagen):
 			else:
 				# Si es un rostro conocido, tomamos el nombre para mostrar en el recuadro
 				texto = str(nombreConocido)
+				#texto = str(ultimo_nombre_conocido)
 			
 			# Dibujamos el recuadro sobre la cara y colocamos la etiqueta con el nombre conocido 
 			# o una indicación de que no es un rostro conocido
