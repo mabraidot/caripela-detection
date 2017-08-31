@@ -14,7 +14,7 @@ env['LD_PRELOAD'] = '/usr/lib/arm-linux-gnueabihf/libv4l/v4l2convert.so'
 ###-------------------------------------------------###
 ###							CONFIGURACIONES											###
 ###-------------------------------------------------###
-windows = True						# Está corriendo en windows?
+windows = False						# Está corriendo en windows?
 cantidad_fotos = 20					# Cantidad de fotos que se le tomarán a los desconocidos
 intervalo = 10							# Intervalo de tiempo para tomar cada foto (frames por segundo)
 fotos_tomadas = 0						# Contador de fotos capturadas

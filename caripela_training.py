@@ -122,9 +122,9 @@ def entrenar():
 			csv_nombres = open('conocidos.csv', 'a+')
 			csv_nombres.write(str(id)+', "'+nombre+'"\n')
 			csv_nombres.close()
-			print u'Entrenando una nueva cara...'
+			print u'Entrenando la nueva cara de ' + nombre
 		else:
-			print u'Actualizando una cara existente...'
+			print u'Actualizando la cara de ' + nombre
 		
 		
 	# Si no hay imágenes en el directorio, mostramos el error y cerramos el programa
