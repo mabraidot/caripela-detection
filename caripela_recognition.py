@@ -12,14 +12,14 @@ env['LD_PRELOAD'] = '/usr/lib/arm-linux-gnueabihf/libv4l/v4l2convert.so'
 
 
 ###-------------------------------------------------###
-###							CONFIGURACIONES											###
+###                 CONFIGURACIONES                 ###
 ###-------------------------------------------------###
-windows = False						# Está corriendo en windows?
-cantidad_fotos = 20					# Cantidad de fotos que se le tomarán a los desconocidos
-intervalo = 10							# Intervalo de tiempo para tomar cada foto (frames por segundo)
-fotos_tomadas = 0						# Contador de fotos capturadas
-margen_marco = 25						# Cantidad de píxeles que achicaremos las fotos capturadas
-tiempo_transcurrido = 0			# Contador de tiempo
+windows = False			# Está corriendo en windows?
+cantidad_fotos = 20		# Cantidad de fotos que se le tomarán a los desconocidos
+intervalo = 10			# Intervalo de tiempo para tomar cada foto (frames por segundo)
+fotos_tomadas = 0		# Contador de fotos capturadas
+margen_marco = 25		# Cantidad de píxeles que achicaremos las fotos capturadas
+tiempo_transcurrido = 0		# Contador de tiempo
 humbral_reconocimiento = 45	# Sensibilidad de reconocimiento, menos es más sensible
 ###-------------------------------------------------###
 
@@ -74,7 +74,7 @@ Si hay rostros, los recuadra e intenta identificarlos usando el algoritmo
 pre-entrenado, si es una cara conocida, imprime el nombre de la persona en el recuadro.
 """
 def buscarCaras(imagen):
-
+	
 	global fotos_tomadas, tiempo_transcurrido, intervalo, cantidad_fotos, margen_marco
 	# Pasamos la imágen a escala de grises, el algoritmo de reconocimiento lo requiere así
 	grices = imagen.copy()
@@ -163,7 +163,7 @@ while camara.stream.isOpened():
 	# Capturamos un cuadro del video
 	cuadro = camara.read()
 	# Procesamos el cuadro para ver si hay rostros
-	buscarCaras(cuadro)
+	buscarCaras(cuadro.copy())
 	# Si el usuario presiona la letra de salir, abortamos el bucle
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
