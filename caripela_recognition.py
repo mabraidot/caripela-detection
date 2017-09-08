@@ -20,7 +20,13 @@ intervalo = 10			# Intervalo de tiempo para tomar cada foto (frames por segundo)
 fotos_tomadas = 0		# Contador de fotos capturadas
 margen_marco = 25		# Cantidad de píxeles que achicaremos las fotos capturadas
 tiempo_transcurrido = 0		# Contador de tiempo
-humbral_reconocimiento = 45	# Sensibilidad de reconocimiento, menos es más sensible
+umbral_reconocimiento = 45	# Sensibilidad de reconocimiento, menos es más sensible
+umbral_desconocidos = 15	# Cantidad de caras desconocidas que tienen que transcurrir antes de marcarla como desconocida
+###-------------------------------------------------###
+###          INICIALIZACION DE VARIABLES            ###
+###-------------------------------------------------###
+tolerancia_desconocidos = umbral_desconocidos
+nombreConocido = False		
 ###-------------------------------------------------###
 
 
@@ -52,17 +58,17 @@ Función que recibe una imágen con un rostro capturado, Intenta identificarlo
 con datos del entrenamiento y devuelve su nombre si tiene éxito o False si no.
 """
 def esUnaCaraConocida(imagen):
-	global humbral_reconocimiento
+	global umbral_reconocimiento
 	
 	"""
 	Si la imágen existe, intentamos identificarla usando el algoritmo 
-	predict que tiene opencv, si la predicción está dentro del humbral, 
+	predict que tiene opencv, si la predicción está dentro del umbral, 
 	la damos por buena y retornamos el nombre de la persona identificada.
 	"""
 	w,h = imagen.shape
 	if not imagen is None and (w > 0 and h > 0) and len(nombres) > 0:
 		prediccion = modelo.predict(imagen)
-		if prediccion[1] < humbral_reconocimiento and nombres[int(prediccion[0])]:
+		if prediccion[1] < umbral_reconocimiento and nombres[int(prediccion[0])]:
 			#return '%s - %s' % (nombres[int(prediccion[0])], str(prediccion[1]))
 			return '%s' % (nombres[int(prediccion[0])])
 	return False
@@ -75,7 +81,8 @@ pre-entrenado, si es una cara conocida, imprime el nombre de la persona en el re
 """
 def buscarCaras(imagen):
 	
-	global fotos_tomadas, tiempo_transcurrido, intervalo, cantidad_fotos, margen_marco
+	global fotos_tomadas, tiempo_transcurrido, intervalo, cantidad_fotos
+	global margen_marco, umbral_desconocidos, tolerancia_desconocidos, nombreConocido
 	# Pasamos la imágen a escala de grises, el algoritmo de reconocimiento lo requiere así
 	grices = imagen.copy()
 	grices = cv2.cvtColor(grices, cv2.COLOR_BGR2GRAY)
@@ -99,18 +106,33 @@ def buscarCaras(imagen):
 		# cuadro mayor a 250 píxeles
 		if h > 250:
 			# Buscamos la cara entre nuestras caras previamente identificadas
-			nombreConocido = esUnaCaraConocida(grices[y+margen_marco:y+h-margen_marco, x+margen_marco:x+w-margen_marco])
-			if not nombreConocido:
-				# Si no conocemos la cara, tomamos una cantidad parametrizable de fotos cada cierta
-				# cantidad de cuadros y las guardamos en un directorio para realizar el entrenamiento
-				if (tiempo_transcurrido % intervalo) == 0 and fotos_tomadas < cantidad_fotos:
-					cv2.imwrite('Caras/cara_desconocida_'+str(fotos_tomadas)+'.jpg', 
-							grices[y+margen_marco:y+h-margen_marco, 
-							x+margen_marco:x+w-margen_marco])
-					fotos_tomadas += 1
-				texto = str("Desconocido - Foto "+str(fotos_tomadas))
-				tiempo_transcurrido += 1
-			else:
+			nombreCaraConocida = esUnaCaraConocida(grices[y+margen_marco:y+h-margen_marco, x+margen_marco:x+w-margen_marco])
+			# Inicializamos el nombre a mostrar por defecto en el recuadro			
+			texto = str("Desconocido")
+			# Si la cara es conocida reseteamos el umbral de tolerancia a caras desconocidas
+			# y guardamos el nombre para mostrarlo luego en el recuadro
+			if nombreCaraConocida:
+				nombreConocido = nombreCaraConocida
+				tolerancia_desconocidos = umbral_desconocidos
+			
+			# Si la cara no es conocida, empezar a descontar de la tolerancia
+			# para evitar los falsos negativos y continuar mostrando el nombre anterior
+			if not nombreCaraConocida:
+				tolerancia_desconocidos -= 1
+				# Si ya llegamos al umbral de tolerancia, mostrar nombre desconocido y tomar foto
+				if tolerancia_desconocidos <= 0:
+					# Si no conocemos la cara, tomamos una cantidad parametrizable de fotos cada cierta
+					# cantidad de cuadros y las guardamos en un directorio para realizar el entrenamiento
+					if (tiempo_transcurrido % intervalo) == 0 and fotos_tomadas < cantidad_fotos:
+						cv2.imwrite('Caras/cara_desconocida_'+str(fotos_tomadas)+'.jpg', 
+								grices[y+margen_marco:y+h-margen_marco, 
+								x+margen_marco:x+w-margen_marco])
+						fotos_tomadas += 1
+					texto = str("Desconocido - Foto "+str(fotos_tomadas))
+					nombreConocido = False
+					tiempo_transcurrido += 1
+
+			if nombreConocido:
 				# Si es un rostro conocido, tomamos el nombre para mostrar en el recuadro
 				texto = str(nombreConocido)
 			
