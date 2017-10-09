@@ -21,27 +21,27 @@ fotos_tomadas = 0		# Contador de fotos capturadas
 margen_marco = 25		# Cantidad de píxeles que achicaremos las fotos capturadas
 tiempo_transcurrido = 0		# Contador de tiempo
 umbral_reconocimiento = 45	# Sensibilidad de reconocimiento, menos es más sensible
-umbral_desconocidos = 15	# Cantidad de caras desconocidas que tienen que transcurrir antes de marcarla como desconocida
+umbral_desconocidos = 15    # Cantidad de caras desconocidas que tienen que transcurrir antes de marcarla como desconocida
 ###-------------------------------------------------###
 ###          INICIALIZACION DE VARIABLES            ###
 ###-------------------------------------------------###
 tolerancia_desconocidos = umbral_desconocidos
-nombreConocido = False		
+nombreConocido = False
 ###-------------------------------------------------###
 
 
 
 # Si es windows, la cámara usb está en el índice 0
 if windows:
-	camIndex = 0
+    camIndex = 0
 else: 
-	camIndex = -1
+    camIndex = -1
 
 
 # Cargamos el xml entrenado para reconocer caras genéricas (Algoritmo Cascadas Haar)
 cascada = cv2.CascadeClassifier('haar/haarcascade_frontalface_default.xml')
 # Si existe, cargamos nuestro xml entrenado para identificar caras
-modelo = cv2.createLBPHFaceRecognizer()
+modelo = cv2.LBPHFaceRecognizer_create()
 if os.path.exists('conocidos.xml'):
 	modelo.load('conocidos.xml')
 
@@ -175,7 +175,7 @@ inicio()
 camara = WebcamVideoStream(src=camIndex).start()
 sleep(1)
 # Mientras el programa está corriendo, mostramos en pantalla la opción de salir
-print '\nAl finalizar presioná (q: Salir del programa).'
+print('\nAl finalizar presioná (q: Salir del programa).')
 
 """
 Bucle principal. Si pudimos capturar la cámara, procesamos cada cuadro en 
