@@ -43,7 +43,7 @@ cascada = cv2.CascadeClassifier('haar/haarcascade_frontalface_default.xml')
 # Si existe, cargamos nuestro xml entrenado para identificar caras
 modelo = cv2.LBPHFaceRecognizer_create()
 if os.path.exists('conocidos.xml'):
-	modelo.load('conocidos.xml')
+	modelo.read('conocidos.xml')
 
 # Inicializamos un arreglo con los nombres de las personas conocidas
 nombres = {}
@@ -64,9 +64,9 @@ def esUnaCaraConocida(imagen):
 	Si la imágen existe, intentamos identificarla usando el algoritmo 
 	predict que tiene opencv, si la predicción está dentro del umbral, 
 	la damos por buena y retornamos el nombre de la persona identificada.
-	"""
-	w,h = imagen.shape
-	if not imagen is None and (w > 0 and h > 0) and len(nombres) > 0:
+    """
+    w, h = imagen.shape
+    if not imagen is None and (w > 0 and h > 0) and len(nombres) > 0:
 		prediccion = modelo.predict(imagen)
 		if prediccion[1] < umbral_reconocimiento and nombres[int(prediccion[0])]:
 			#return '%s - %s' % (nombres[int(prediccion[0])], str(prediccion[1]))
@@ -153,7 +153,7 @@ def buscarCaras(imagen):
 Función que presenta el menú en pantalla para iniciar el reconocimiento
 """
 def inicio():
-	opcion = raw_input('\nParate frente a la cámara y presioná (r: reconococer rostro), \nAl finalizar presioná (q: Salir del programa):')
+	opcion = input('\nParate frente a la cámara y presioná (r: reconococer rostro), \nAl finalizar presioná (q: Salir del programa):')
 	"""
 	Si el usuario presionó la letra r, salimos de la función para que el programa 
 	continúe y entre en el bucle (while) principal. Si es otra letra, la función

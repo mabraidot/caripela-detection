@@ -17,14 +17,14 @@ Genera una lista con los nombres conocidos por el modelo y la opción de crear u
 con una cara nueva.
 """
 def menu():
+
+    global opciones
 	
-	global opciones
-	
-	opciones = {}
-	(nombres, id) = ({}, 0)
-	etiqueta = -1
+    opciones = {}
+    (nombres, id) = ({}, 0)
+    etiqueta = -1
 	# Abrimos la lista de nombres conocidos y generamos el menú con el nombre y ID de la persona
-	with open('conocidos.csv','r') as csv_nombres:
+    with open('conocidos.csv','r') as csv_nombres:
 		for renglon in csv_nombres:
 			etiqueta,nombre = renglon.split(',')
 			nombre = str.replace(nombre, "\"", "")
@@ -32,33 +32,33 @@ def menu():
 			opciones[int(etiqueta)] = nombre
 	
 	# Agregamos una opción para cargar el nombre de una cara desconocida
-	opciones['n'] = "Nuevo rostro"
+    opciones['n'] = "Nuevo rostro"
 	
 	# Preparamos el texo del menú
-	texto_opciones = "\n\nSi deseás actualizar el modelo de una persona que ya existía, seleccioná la opción con su nombre.\nSi es una persona desconocida, presioná n para entrenar el modelo: \n\n"
-	for id, texto in opciones.iteritems():
+    texto_opciones = "\n\nSi deseás actualizar el modelo de una persona que ya existía, seleccioná la opción con su nombre.\nSi es una persona desconocida, presioná n para entrenar el modelo: \n\n"
+    for id, texto in opciones.iteritems():
 		texto_opciones = texto_opciones + "(" + str(id) + ") " + texto + "\n"
 	
 	# Mostramos el menú en pantalla y esperamos que el usuario elija una opción
-	opcion = raw_input(texto_opciones)
+    opcion = input(texto_opciones)
 	# Si la opción elegida es salir, salimos
-	if opcion == 'q':
+    if opcion == 'q':
 		exit()
 	# Si eligió nueva cara, usamos el próximo ID disponible y le pedimos al usuario
 	# que ingrese el nombre de la nueva cara
-	elif opcion == 'n':
-		nombre = raw_input('\nIngresá el nombre de la persona y presioná <Enter>: ')
+    elif opcion == 'n':
+		nombre = input('\nIngresá el nombre de la persona y presioná <Enter>: ')
 		id = int(etiqueta) + 1
 		return id, nombre
 	# Si desea actualizar una cara ya conocida con nuevas fotos, tomamos el nombre
 	# y ID conocidos
-	elif int(opcion) in opciones:
+    elif int(opcion) in opciones:
 		nombre = opciones[int(opcion)]
 		id = int(opcion)
 		return id, nombre
 	# Si no eligió alguna de las anteriores, mostramos mensaje de error y cerramos el programa
-	else:
-		print u"Opción no válida."
+    else:
+		print(u"Opción no válida.")
 		exit()
 
 
@@ -103,33 +103,33 @@ def entrenar():
 		
 		
 		# Inicializamos el modelo
-		modelo = cv2.createLBPHFaceRecognizer()
+		modelo = cv2.LBPHFaceRecognizer_create()
 		archivo_modelo = 'conocidos.xml'
 		# Si ya existía el archivo xml de reconocimiento, lo actualizamos
 		if os.path.exists(archivo_modelo):
-			modelo.load(archivo_modelo)
+			modelo.read(archivo_modelo)
 			modelo.update(imagenes, etiquetas)
-			print u'Actualizando el modelo...'
+			print(u'Actualizando el modelo...')
 		# Si no existe el archivo xml de reconocimiento, lo creamos
 		else:
 			modelo.train(imagenes, etiquetas)
-			print u'Creando un nuevo modelo...'
+			print(u'Creando un nuevo modelo...')
 		
 		# Guardamos los cambios en el modelo
-		modelo.save(archivo_modelo)
+		modelo.write(archivo_modelo)
 		# Si entrenamos una nueva cara, agregamos su nombre y ID a la lista de personas conocidas
 		if int(id) not in opciones:
 			csv_nombres = open('conocidos.csv', 'a+')
 			csv_nombres.write(str(id)+', "'+nombre+'"\n')
 			csv_nombres.close()
-			print u'Entrenando la nueva cara de ' + nombre
+			print(u'Entrenando la nueva cara de ' + nombre)
 		else:
-			print u'Actualizando la cara de ' + nombre
+			print(u'Actualizando la cara de ' + nombre)
 		
 		
 	# Si no hay imágenes en el directorio, mostramos el error y cerramos el programa
 	else:
-		print u"\n\nNo hay imágenes disponibles para realizar el entrenamiento.\n\n"
+		print(u"\n\nNo hay imágenes disponibles para realizar el entrenamiento.\n\n")
 	exit()
 
 # Llamada a la función de entrenamiento
