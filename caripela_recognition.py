@@ -6,9 +6,9 @@ import numpy as np
 from FPS.WebcamVideoStream import WebcamVideoStream
 
 # En Linux parece haber un problema con libv4l y se necesita recargarla
-from os import environ
-env = dict(environ)
-env['LD_PRELOAD'] = '/usr/lib/arm-linux-gnueabihf/libv4l/v4l2convert.so'
+#from os import environ
+#env = dict(environ)
+#env['LD_PRELOAD'] = '/usr/lib/arm-linux-gnueabihf/libv4l/v4l2convert.so'
 
 
 ###-------------------------------------------------###
@@ -140,7 +140,7 @@ def buscarCaras(imagen):
             # o una indicación de que no es un rostro conocido
             cv2.rectangle(imagen, (x+margen_marco, y+margen_marco), (x+w-margen_marco, y+h-margen_marco), (0, 255, 0), 2)
             wText, h = cv2.getTextSize(texto, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
-            cv2.rectangle(imagen, (x+margen_marco, y+margen_marco), (x+margen_marco+wText[0]+10, y+margen_marco+20), (0, 255, 0), cv2.CV_FILLED)
+            cv2.rectangle(imagen, (x+margen_marco, y+margen_marco), (x+margen_marco+wText[0]+10, y+margen_marco+20), (0, 255, 0), cv2.FILLED)
             cv2.putText(imagen, texto, (x+margen_marco+5, y+margen_marco+15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255),2)
 
     # Mostramos cada cuadro en la ventana de video
