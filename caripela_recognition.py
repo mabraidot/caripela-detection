@@ -41,7 +41,7 @@ else:
 # Cargamos el xml entrenado para reconocer caras genéricas (Algoritmo Cascadas Haar)
 cascada = cv2.CascadeClassifier('haar/haarcascade_frontalface_default.xml')
 # Si existe, cargamos nuestro xml entrenado para identificar caras
-modelo = cv2.LBPHFaceRecognizer_create()
+modelo = cv2.face.LBPHFaceRecognizer_create()
 if os.path.exists('conocidos.xml'):
     modelo.read('conocidos.xml')
 
@@ -140,7 +140,7 @@ def buscarCaras(imagen):
             # o una indicación de que no es un rostro conocido
             cv2.rectangle(imagen, (x+margen_marco, y+margen_marco), (x+w-margen_marco, y+h-margen_marco), (0, 255, 0), 2)
             wText, h = cv2.getTextSize(texto, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
-            cv2.rectangle(imagen, (x+margen_marco, y+margen_marco), (x+margen_marco+wText[0]+10, y+margen_marco+20), (0, 255, 0), cv2.cv.CV_FILLED)
+            cv2.rectangle(imagen, (x+margen_marco, y+margen_marco), (x+margen_marco+wText[0]+10, y+margen_marco+20), (0, 255, 0), cv2.CV_FILLED)
             cv2.putText(imagen, texto, (x+margen_marco+5, y+margen_marco+15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255),2)
 
     # Mostramos cada cuadro en la ventana de video

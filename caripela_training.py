@@ -103,7 +103,7 @@ def entrenar():
         
         
         # Inicializamos el modelo
-        modelo = cv2.LBPHFaceRecognizer_create()
+        modelo = cv2.face.LBPHFaceRecognizer_create()
         archivo_modelo = 'conocidos.xml'
         # Si ya existía el archivo xml de reconocimiento, lo actualizamos
         if os.path.exists(archivo_modelo):
