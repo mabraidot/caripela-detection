@@ -19,6 +19,7 @@ cantidad_fotos = 20		# Cantidad de fotos que se le tomarán a los desconocidos
 intervalo = 10			# Intervalo de tiempo para tomar cada foto (frames por segundo)
 fotos_tomadas = 0		# Contador de fotos capturadas
 margen_marco = 25		# Cantidad de píxeles que achicaremos las fotos capturadas
+tamanio_reconocimiento = 300  # Tamaño mínimo en pixeles para detectar una cara
 tiempo_transcurrido = 0		# Contador de tiempo
 umbral_reconocimiento = 45	# Sensibilidad de reconocimiento, menos es más sensible
 umbral_desconocidos = 15    # Cantidad de caras desconocidas que tienen que transcurrir antes de marcarla como desconocida
@@ -83,6 +84,7 @@ def buscarCaras(imagen):
     
     global fotos_tomadas, tiempo_transcurrido, intervalo, cantidad_fotos
     global margen_marco, umbral_desconocidos, tolerancia_desconocidos, nombreConocido
+    global tamanio_reconocimiento
     # Pasamos la imágen a escala de grises, el algoritmo de reconocimiento lo requiere así
     grices = imagen.copy()
     grices = cv2.cvtColor(grices, cv2.COLOR_BGR2GRAY)
@@ -95,16 +97,15 @@ def buscarCaras(imagen):
     caras = cascada.detectMultiScale(
         grices,
         scaleFactor=1.1,
-        minNeighbors=5,
-        minSize=(30, 30),
-        flags = cv2.CASCADE_SCALE_IMAGE
+        minNeighbors=3,
+        minSize=(tamanio_reconocimiento, tamanio_reconocimiento)
     )
     
     # Por cada cara encontrada vamos a dibujar un recuadro y tratar de identificarlas
     for (x, y, w, h) in caras:
         # Solo tomaremos las caras reconocidas que estén cerca de la camara, 
         # cuadro mayor a 250 píxeles
-        if h > 250:
+        if h > (tamanio_reconocimiento-50):
             # Buscamos la cara entre nuestras caras previamente identificadas
             nombreCaraConocida = esUnaCaraConocida(grices[y+margen_marco:y+h-margen_marco, x+margen_marco:x+w-margen_marco])
             # Inicializamos el nombre a mostrar por defecto en el recuadro			
