@@ -1,4 +1,5 @@
 .git/
 Caras/
 FPS/__pycache__/*
+.vscode/*
 *.pyc

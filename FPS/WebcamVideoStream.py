@@ -3,14 +3,14 @@ from threading import Thread
 import cv2
 
 class WebcamVideoStream:
-    def __init__(self, src=-1):
+    def __init__(self, src=-1, resolution=(320, 240)):
         # initialize the video camera stream and read the first frame
         # from the stream
         self.stream = cv2.VideoCapture(src)
-	#self.stream.set(3 , 320);
-	#self.stream.set(4 , 240);
+        self.stream.set(3 , resolution[0])
+        self.stream.set(4 , resolution[1])
         (self.grabbed, self.frame) = self.stream.read()
-	
+
         # initialize the variable used to indicate if the thread should
         # be stopped
         self.stopped = False
@@ -25,7 +25,7 @@ class WebcamVideoStream:
         while True:
             # if the thread indicator variable is set, stop the thread
             if self.stopped:
-		self.stream.release()
+                self.stream.release()
                 return
 
             # otherwise, read the next frame from the stream
