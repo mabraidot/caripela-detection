@@ -15,7 +15,7 @@ from FPS.VideoStream import VideoStream
 ###                 CONFIGURACIONES                 ###
 ###-------------------------------------------------###
 usarPiCam = False               # Está corriendo en Raspberry Pi con piCamera?
-windows = True		            # Está corriendo en windows?
+windows = False		            # Está corriendo en windows?
 cantidad_fotos = 20	            # Cantidad de fotos que se le tomarán a los desconocidos
 intervalo = 5			        # Intervalo de tiempo para tomar cada foto (frames por segundo)
 fotos_tomadas = 0		        # Contador de fotos capturadas
@@ -50,7 +50,7 @@ if os.path.exists('conocidos.xml'):
 
 # Inicializamos un arreglo con los nombres de las personas conocidas
 nombres = {}
-if os.path.exists('conocidos.csv'):
+if not os.path.exists('conocidos.csv'):
     open('conocidos.csv','w')
 with open('conocidos.csv','r') as f:
     for renglon in f:
