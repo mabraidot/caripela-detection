@@ -14,15 +14,17 @@ from FPS.VideoStream import VideoStream
 ###-------------------------------------------------###
 ###                 CONFIGURACIONES                 ###
 ###-------------------------------------------------###
-windows = True			# Está corriendo en windows?
-cantidad_fotos = 20		# Cantidad de fotos que se le tomarán a los desconocidos
-intervalo = 5			# Intervalo de tiempo para tomar cada foto (frames por segundo)
-fotos_tomadas = 0		# Contador de fotos capturadas
-margen_marco = 25		# Cantidad de píxeles que achicaremos las fotos capturadas
-tamanio_reconocimiento = 300  # Tamaño mínimo en pixeles para detectar una cara
-tiempo_transcurrido = 0		# Contador de tiempo
-umbral_reconocimiento = 35	# Sensibilidad de reconocimiento, menos es más sensible
-umbral_desconocidos = 7    # Cantidad de caras desconocidas que tienen que transcurrir antes de marcarla como desconocida
+usarPiCam = False               # Está corriendo en Raspberry Pi con piCamera?
+windows = True		            # Está corriendo en windows?
+cantidad_fotos = 20	            # Cantidad de fotos que se le tomarán a los desconocidos
+intervalo = 5			        # Intervalo de tiempo para tomar cada foto (frames por segundo)
+fotos_tomadas = 0		        # Contador de fotos capturadas
+margen_marco = 25		        # Cantidad de píxeles que achicaremos las fotos capturadas
+resolucion = (640, 480)         # Resolusión del video
+tamanio_reconocimiento = 300    # Tamaño mínimo en pixeles para detectar una cara
+tiempo_transcurrido = 0         # Contador de tiempo
+umbral_reconocimiento = 35      # Sensibilidad de reconocimiento, menos es más sensible
+umbral_desconocidos = 7         # Cantidad de caras desconocidas que tienen que transcurrir antes de marcarla como desconocida
 ###-------------------------------------------------###
 ###          INICIALIZACION DE VARIABLES            ###
 ###-------------------------------------------------###
@@ -32,12 +34,12 @@ nombreConocido = False
 
 
 
+# Si usamos picamera, obviamente es Linux sobre Raspberry Pi.
 # Si es windows, la cámara usb está en el índice 0
-if windows:
-    camIndex = 0
-else: 
+if usarPiCam or not windows:
     camIndex = -1
-
+else:
+    camIndex = 0
 
 # Cargamos el xml entrenado para reconocer caras genéricas (Algoritmo Cascadas Haar)
 cascada = cv2.CascadeClassifier('haar/haarcascade_frontalface_default.xml')
@@ -173,7 +175,7 @@ mostrar el menú de opciones
 inicio()
 
 # Inicializamos la cámara
-camara = VideoStream(src=camIndex, usePiCamera=False, resolution=(640, 480)).start()
+camara = VideoStream(src=camIndex, usePiCamera=usarPiCam, resolution=resolucion).start()
 #camara = WebcamVideoStream(src=camIndex).start()
 sleep(1)
 # Mientras el programa está corriendo, mostramos en pantalla la opción de salir
