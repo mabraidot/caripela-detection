@@ -3,7 +3,7 @@ import sys, os
 from time import sleep
 import cv2
 import numpy as np
-from FPS.WebcamVideoStream import WebcamVideoStream
+from FPS.VideoStream import VideoStream
 
 # En Linux parece haber un problema con libv4l y se necesita recargarla
 #from os import environ
@@ -14,15 +14,15 @@ from FPS.WebcamVideoStream import WebcamVideoStream
 ###-------------------------------------------------###
 ###                 CONFIGURACIONES                 ###
 ###-------------------------------------------------###
-windows = False			# Está corriendo en windows?
+windows = True			# Está corriendo en windows?
 cantidad_fotos = 20		# Cantidad de fotos que se le tomarán a los desconocidos
-intervalo = 10			# Intervalo de tiempo para tomar cada foto (frames por segundo)
+intervalo = 5			# Intervalo de tiempo para tomar cada foto (frames por segundo)
 fotos_tomadas = 0		# Contador de fotos capturadas
 margen_marco = 25		# Cantidad de píxeles que achicaremos las fotos capturadas
 tamanio_reconocimiento = 300  # Tamaño mínimo en pixeles para detectar una cara
 tiempo_transcurrido = 0		# Contador de tiempo
-umbral_reconocimiento = 45	# Sensibilidad de reconocimiento, menos es más sensible
-umbral_desconocidos = 15    # Cantidad de caras desconocidas que tienen que transcurrir antes de marcarla como desconocida
+umbral_reconocimiento = 35	# Sensibilidad de reconocimiento, menos es más sensible
+umbral_desconocidos = 7    # Cantidad de caras desconocidas que tienen que transcurrir antes de marcarla como desconocida
 ###-------------------------------------------------###
 ###          INICIALIZACION DE VARIABLES            ###
 ###-------------------------------------------------###
@@ -70,8 +70,8 @@ def esUnaCaraConocida(imagen):
     if not imagen is None and (w > 0 and h > 0) and len(nombres) > 0:
         prediccion = modelo.predict(imagen)
         if prediccion[1] < umbral_reconocimiento and nombres[int(prediccion[0])]:
-            #return '%s - %s' % (nombres[int(prediccion[0])], str(prediccion[1]))
-            return '%s' % (nombres[int(prediccion[0])])
+            return '%s - %s' % (nombres[int(prediccion[0])], str(prediccion[1]))
+            #return '%s' % (nombres[int(prediccion[0])])
     return False
 
 
@@ -173,7 +173,8 @@ mostrar el menú de opciones
 inicio()
 
 # Inicializamos la cámara
-camara = WebcamVideoStream(src=camIndex).start()
+camara = VideoStream(src=camIndex, usePiCamera=False, resolution=(640, 480)).start()
+#camara = WebcamVideoStream(src=camIndex).start()
 sleep(1)
 # Mientras el programa está corriendo, mostramos en pantalla la opción de salir
 print('\nAl finalizar presioná (q: Salir del programa).')
@@ -194,4 +195,3 @@ while camara.stream.isOpened():
 # Al salir, liberar la cámara y cerrar la ventana de video
 camara.stop()
 cv2.destroyAllWindows()
-
