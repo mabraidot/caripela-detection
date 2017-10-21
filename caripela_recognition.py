@@ -15,7 +15,7 @@ from FPS.VideoStream import VideoStream
 ###                 CONFIGURACIONES                 ###
 ###-------------------------------------------------###
 usarPiCam = False               # Está corriendo en Raspberry Pi con piCamera?
-windows = False		            # Está corriendo en windows?
+windows = True		            # Está corriendo en windows?
 cantidad_fotos = 20	            # Cantidad de fotos que se le tomarán a los desconocidos
 intervalo = 5			        # Intervalo de tiempo para tomar cada foto (frames por segundo)
 fotos_tomadas = 0		        # Contador de fotos capturadas
