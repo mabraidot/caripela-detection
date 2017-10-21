@@ -17,10 +17,10 @@ from FPS.VideoStream import VideoStream
 usarPiCam = False               # Está corriendo en Raspberry Pi con piCamera?
 windows = True		            # Está corriendo en windows?
 cantidad_fotos = 20	            # Cantidad de fotos que se le tomarán a los desconocidos
-intervalo = 5			        # Intervalo de tiempo para tomar cada foto (frames por segundo)
+intervalo = 8			        # Intervalo de tiempo para tomar cada foto (frames por segundo)
 fotos_tomadas = 0		        # Contador de fotos capturadas
 margen_marco = 25		        # Cantidad de píxeles que achicaremos las fotos capturadas
-resolucion = (640, 480)         # Resolusión del video
+resolucion = (1280, 960)         # Resolusión del video
 tamanio_reconocimiento = 300    # Tamaño mínimo en pixeles para detectar una cara
 tiempo_transcurrido = 0         # Contador de tiempo
 umbral_reconocimiento = 35      # Sensibilidad de reconocimiento, menos es más sensible
@@ -74,8 +74,8 @@ def esUnaCaraConocida(imagen):
     if not imagen is None and (w > 0 and h > 0) and len(nombres) > 0:
         prediccion = modelo.predict(imagen)
         if prediccion[1] < umbral_reconocimiento and nombres[int(prediccion[0])]:
-            return '%s - %s' % (nombres[int(prediccion[0])], str(prediccion[1]))
-            #return '%s' % (nombres[int(prediccion[0])])
+            return '{} - {:04.1f}'.format(nombres[int(prediccion[0])], prediccion[1])
+            #return '{}'.format(nombres[int(prediccion[0])])
     return False
 
 
@@ -94,7 +94,7 @@ def buscarCaras(imagen):
     grices = cv2.cvtColor(grices, cv2.COLOR_BGR2GRAY)
     # Ecualizamos la imágen para normalizar la iluminación, ya que el algoritmo de 
     # reconocimiento es muy sensible a variaciones de luces y sombras
-    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+    clahe = cv2.createCLAHE(clipLimit=20.0, tileGridSize=(8,8))
     grices = clahe.apply(grices)
     
     # Buscamos caras en la imágen en escala de grises
@@ -150,6 +150,7 @@ def buscarCaras(imagen):
 
     # Mostramos cada cuadro en la ventana de video
     cv2.imshow('Video', imagen)
+    #cv2.imshow('Video', grices)
 
     return
 
