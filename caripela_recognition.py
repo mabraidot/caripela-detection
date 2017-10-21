@@ -50,7 +50,7 @@ if os.path.exists('conocidos.xml'):
 
 # Inicializamos un arreglo con los nombres de las personas conocidas
 nombres = {}
-with open('conocidos.csv','r') as f:
+with open('conocidos.csv','w+') as f:
     for renglon in f:
         id,nombre = renglon.split(',')
         nombres[int(id)] = str(nombre).rstrip('\n').strip().strip('"')
