@@ -19,11 +19,11 @@ windows = True		            # Está corriendo en windows?
 cantidad_fotos = 20	            # Cantidad de fotos que se le tomarán a los desconocidos
 intervalo = 8			        # Intervalo de tiempo para tomar cada foto (frames por segundo)
 fotos_tomadas = 0		        # Contador de fotos capturadas
-margen_marco = 25		        # Cantidad de píxeles que achicaremos las fotos capturadas
-resolucion = (1280, 960)         # Resolusión del video
+margen_marco = 50		        # Cantidad de píxeles que achicaremos las fotos capturadas
+resolucion = (640, 480)         # Resolusión del video
 tamanio_reconocimiento = 250    # Tamaño mínimo en pixeles para detectar una cara
 tiempo_transcurrido = 0         # Contador de tiempo
-umbral_reconocimiento = 45      # Sensibilidad de reconocimiento, menos es más sensible
+umbral_reconocimiento = 35      # Sensibilidad de reconocimiento, menos es más sensible
 umbral_desconocidos = 7         # Cantidad de caras desconocidas que tienen que transcurrir antes de marcarla como desconocida
 ###-------------------------------------------------###
 ###          INICIALIZACION DE VARIABLES            ###
@@ -100,7 +100,7 @@ def buscarCaras(imagen):
     # reconocimiento es muy sensible a variaciones de luces y sombras
     clahe = cv2.createCLAHE(clipLimit=20.0, tileGridSize=(8,8))
     grices = clahe.apply(grices)
-    
+    grices = cv2.bilateralFilter(grices,4,55,55)
     # Buscamos caras en la imágen en escala de grises
     caras = cascada.detectMultiScale(
         grices,
@@ -119,9 +119,11 @@ def buscarCaras(imagen):
             # Inicializamos el arreglo de nombres conocidos para esta cara en false
             if not indiceCara in nombreConocido:
                 nombreConocido[indiceCara] = False
-            
+            # Recortamos la imágen para tener solo la cara
+            caraGris = grices[y+margen_marco:y+h-margen_marco, x+margen_marco:x+w-margen_marco]
+            #caraGris = cv2.equalizeHist(caraGris)
             # Buscamos la cara entre nuestras caras previamente identificadas
-            nombreCaraConocida[indiceCara] = esUnaCaraConocida(grices[y+margen_marco:y+h-margen_marco, x+margen_marco:x+w-margen_marco])
+            nombreCaraConocida[indiceCara] = esUnaCaraConocida(caraGris)
             # Inicializamos el nombre a mostrar por defecto en el recuadro			
             texto = str("Desconocido "+str(indiceCara))
             # Si la cara es conocida reseteamos el umbral de tolerancia a caras desconocidas
@@ -142,9 +144,7 @@ def buscarCaras(imagen):
                     # Si no conocemos la cara, tomamos una cantidad parametrizable de fotos cada cierta
                     # cantidad de cuadros y las guardamos en un directorio para realizar el entrenamiento
                     if (tiempo_transcurrido % intervalo) == 0 and fotos_tomadas < cantidad_fotos:
-                        cv2.imwrite('Caras/cara_desconocida_'+str(fotos_tomadas)+'.jpg', 
-                                grices[y+margen_marco:y+h-margen_marco, 
-                                x+margen_marco:x+w-margen_marco])
+                        cv2.imwrite('Caras/cara_desconocida_'+str(fotos_tomadas)+'.jpg', caraGris)
                         fotos_tomadas += 1
                     texto = str("Desconocido "+str(indiceCara)+" - Foto "+str(fotos_tomadas))
                     nombreConocido[indiceCara] = False
@@ -162,12 +162,11 @@ def buscarCaras(imagen):
             cv2.putText(imagen, texto, (x+margen_marco+5, y+margen_marco+15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255),2)
 
             indiceCara += 1
-        
 
     # Mostramos cada cuadro en la ventana de video
     cv2.imshow('Video', imagen)
-    #cv2.imshow('Video', grices)
-
+    #cv2.imshow('VideoGris', grices)
+    
     return
 
 
