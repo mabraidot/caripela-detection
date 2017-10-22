@@ -123,7 +123,7 @@ def buscarCaras(imagen):
             # Buscamos la cara entre nuestras caras previamente identificadas
             nombreCaraConocida[indiceCara] = esUnaCaraConocida(grices[y+margen_marco:y+h-margen_marco, x+margen_marco:x+w-margen_marco])
             # Inicializamos el nombre a mostrar por defecto en el recuadro			
-            texto = str("Desconocido - "+str(indiceCara))
+            texto = str("Desconocido "+str(indiceCara))
             # Si la cara es conocida reseteamos el umbral de tolerancia a caras desconocidas
             # y guardamos el nombre para mostrarlo luego en el recuadro
             if nombreCaraConocida[indiceCara]:
@@ -146,7 +146,7 @@ def buscarCaras(imagen):
                                 grices[y+margen_marco:y+h-margen_marco, 
                                 x+margen_marco:x+w-margen_marco])
                         fotos_tomadas += 1
-                    texto = str("Desconocido - Foto "+str(fotos_tomadas)+" - "+str(indiceCara))
+                    texto = str("Desconocido "+str(indiceCara)+" - Foto "+str(fotos_tomadas))
                     nombreConocido[indiceCara] = False
                     tiempo_transcurrido += 1
 
