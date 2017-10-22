@@ -21,15 +21,19 @@ intervalo = 8			        # Intervalo de tiempo para tomar cada foto (frames por s
 fotos_tomadas = 0		        # Contador de fotos capturadas
 margen_marco = 25		        # Cantidad de píxeles que achicaremos las fotos capturadas
 resolucion = (1280, 960)         # Resolusión del video
-tamanio_reconocimiento = 300    # Tamaño mínimo en pixeles para detectar una cara
+tamanio_reconocimiento = 250    # Tamaño mínimo en pixeles para detectar una cara
 tiempo_transcurrido = 0         # Contador de tiempo
-umbral_reconocimiento = 35      # Sensibilidad de reconocimiento, menos es más sensible
+umbral_reconocimiento = 45      # Sensibilidad de reconocimiento, menos es más sensible
 umbral_desconocidos = 7         # Cantidad de caras desconocidas que tienen que transcurrir antes de marcarla como desconocida
 ###-------------------------------------------------###
 ###          INICIALIZACION DE VARIABLES            ###
 ###-------------------------------------------------###
-tolerancia_desconocidos = umbral_desconocidos
-nombreConocido = False
+#tolerancia_desconocidos = umbral_desconocidos
+#nombreConocido = False
+#nombreCaraConocida = False
+tolerancia_desconocidos = {}
+nombreConocido = {}
+nombreCaraConocida = {}
 ###-------------------------------------------------###
 
 
@@ -106,26 +110,35 @@ def buscarCaras(imagen):
     )
     
     # Por cada cara encontrada vamos a dibujar un recuadro y tratar de identificarlas
+    indiceCara = 0
     for (x, y, w, h) in caras:
         # Solo tomaremos las caras reconocidas que estén cerca de la camara, 
         # cuadro mayor a 250 píxeles
         if h > (tamanio_reconocimiento-50):
+
+            # Inicializamos el arreglo de nombres conocidos para esta cara en false
+            if not indiceCara in nombreConocido:
+                nombreConocido[indiceCara] = False
+            
             # Buscamos la cara entre nuestras caras previamente identificadas
-            nombreCaraConocida = esUnaCaraConocida(grices[y+margen_marco:y+h-margen_marco, x+margen_marco:x+w-margen_marco])
+            nombreCaraConocida[indiceCara] = esUnaCaraConocida(grices[y+margen_marco:y+h-margen_marco, x+margen_marco:x+w-margen_marco])
             # Inicializamos el nombre a mostrar por defecto en el recuadro			
-            texto = str("Desconocido")
+            texto = str("Desconocido - "+str(indiceCara))
             # Si la cara es conocida reseteamos el umbral de tolerancia a caras desconocidas
             # y guardamos el nombre para mostrarlo luego en el recuadro
-            if nombreCaraConocida:
-                nombreConocido = nombreCaraConocida
-                tolerancia_desconocidos = umbral_desconocidos
+            if nombreCaraConocida[indiceCara]:
+                nombreConocido[indiceCara] = nombreCaraConocida[indiceCara]
+                tolerancia_desconocidos[indiceCara] = umbral_desconocidos
             
             # Si la cara no es conocida, empezar a descontar de la tolerancia
             # para evitar los falsos negativos y continuar mostrando el nombre anterior
-            if not nombreCaraConocida:
-                tolerancia_desconocidos -= 1
+            if not nombreCaraConocida[indiceCara]:
+                if not indiceCara in tolerancia_desconocidos:
+                    tolerancia_desconocidos[indiceCara] = umbral_desconocidos
+
+                tolerancia_desconocidos[indiceCara] -= 1
                 # Si ya llegamos al umbral de tolerancia, mostrar nombre desconocido y tomar foto
-                if tolerancia_desconocidos <= 0:
+                if tolerancia_desconocidos[indiceCara] <= 0:
                     # Si no conocemos la cara, tomamos una cantidad parametrizable de fotos cada cierta
                     # cantidad de cuadros y las guardamos en un directorio para realizar el entrenamiento
                     if (tiempo_transcurrido % intervalo) == 0 and fotos_tomadas < cantidad_fotos:
@@ -133,13 +146,13 @@ def buscarCaras(imagen):
                                 grices[y+margen_marco:y+h-margen_marco, 
                                 x+margen_marco:x+w-margen_marco])
                         fotos_tomadas += 1
-                    texto = str("Desconocido - Foto "+str(fotos_tomadas))
-                    nombreConocido = False
+                    texto = str("Desconocido - Foto "+str(fotos_tomadas)+" - "+str(indiceCara))
+                    nombreConocido[indiceCara] = False
                     tiempo_transcurrido += 1
 
-            if nombreConocido:
+            if nombreConocido[indiceCara]:
                 # Si es un rostro conocido, tomamos el nombre para mostrar en el recuadro
-                texto = str(nombreConocido)
+                texto = str(nombreConocido[indiceCara])
             
             # Dibujamos el recuadro sobre la cara y colocamos la etiqueta con el nombre conocido 
             # o una indicación de que no es un rostro conocido
@@ -147,6 +160,9 @@ def buscarCaras(imagen):
             wText, h = cv2.getTextSize(texto, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
             cv2.rectangle(imagen, (x+margen_marco, y+margen_marco), (x+margen_marco+wText[0]+10, y+margen_marco+20), (0, 255, 0), cv2.FILLED)
             cv2.putText(imagen, texto, (x+margen_marco+5, y+margen_marco+15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255),2)
+
+            indiceCara += 1
+        
 
     # Mostramos cada cuadro en la ventana de video
     cv2.imshow('Video', imagen)
