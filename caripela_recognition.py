@@ -14,8 +14,8 @@ from FPS.VideoStream import VideoStream
 ###-------------------------------------------------###
 ###                 CONFIGURACIONES                 ###
 ###-------------------------------------------------###
-usarPiCam = False               # Está corriendo en Raspberry Pi con piCamera?
-windows = True		            # Está corriendo en windows?
+usarPiCam = True               # Está corriendo en Raspberry Pi con piCamera?
+windows = False		            # Está corriendo en windows?
 cantidad_fotos = 20	            # Cantidad de fotos que se le tomarán a los desconocidos
 intervalo = 8			        # Intervalo de tiempo para tomar cada foto (frames por segundo)
 fotos_tomadas = 0		        # Contador de fotos capturadas
@@ -203,7 +203,7 @@ print('\nAl finalizar presioná (q: Salir del programa).')
 Bucle principal. Si pudimos capturar la cámara, procesamos cada cuadro en 
 búsqueda de rostros
 """
-while camara.stream.isOpened():
+while True:
     # Capturamos un cuadro del video
     cuadro = camara.read()
     # Procesamos el cuadro para ver si hay rostros
