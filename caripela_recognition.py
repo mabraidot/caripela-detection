@@ -195,7 +195,7 @@ inicio()
 # Inicializamos la cámara
 camara = VideoStream(src=camIndex, usePiCamera=usarPiCam, resolution=resolucion).start()
 #camara = WebcamVideoStream(src=camIndex).start()
-sleep(1)
+sleep(2)
 # Mientras el programa está corriendo, mostramos en pantalla la opción de salir
 print('\nAl finalizar presioná (q: Salir del programa).')
 
