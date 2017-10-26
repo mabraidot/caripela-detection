@@ -21,7 +21,7 @@ intervalo = 8			        # Intervalo de tiempo para tomar cada foto (frames por s
 fotos_tomadas = 0		        # Contador de fotos capturadas
 margen_marco = 50		        # Cantidad de píxeles que achicaremos las fotos capturadas
 resolucion = (528, 368)         # Resolusión del video
-tamanio_reconocimiento = 300    # Tamaño mínimo en pixeles para detectar una cara
+tamanio_reconocimiento = 250    # Tamaño mínimo en pixeles para detectar una cara
 tiempo_transcurrido = 0         # Contador de tiempo
 umbral_reconocimiento = 35      # Sensibilidad de reconocimiento, menos es más sensible
 umbral_desconocidos = 7         # Cantidad de caras desconocidas que tienen que transcurrir antes de marcarla como desconocida
@@ -104,8 +104,8 @@ def buscarCaras(imagen):
     # Buscamos caras en la imágen en escala de grises
     caras = cascada.detectMultiScale(
         grices,
-        scaleFactor=1.2,
-        minNeighbors=2,
+        scaleFactor=1.1,
+        minNeighbors=3,
         minSize=(tamanio_reconocimiento, tamanio_reconocimiento)
     )
     
