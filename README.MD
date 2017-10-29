@@ -1,7 +1,5 @@
 CARIPELA DETECTION
 ====================
-IFTS N° 14 - Tecnicatura Superior en Robótica
----------------------------------------------
 
 **UBICACION DEL PROYECTO**
 * ~/Documents/Proyectos/caripela_detection/
@@ -12,8 +10,8 @@ IFTS N° 14 - Tecnicatura Superior en Robótica
 * **/haar/**: Archivos preentrenador para reconocer una cara dentro de una imágen.
 * **/caripela_recognition.py**: Intenta reconocer e identificar una cara dentro del video. Si no es conocida, le toma fotos para usar en el algoritmo de entrenamiento.
 * **/caripela_training.py**: Si hay fotos de una persona desconocida, las usa para entrenar al algoritmo de identificación.
-* **conocidos.xml**: Almacena las características de las caras pre-entrenadas que utilizará el algoritmo de identificación.
-* **conocidos.csv**: Almacena los nombres de las caras conocidas.
+* **/conocidos.xml**: Almacena las características de las caras pre-entrenadas que utilizará el algoritmo de identificación.
+* **/conocidos.csv**: Almacena los nombres de las caras conocidas.
 
 **MODO DE USO - INICIALIZACIÓN**
 * cd ~/Documents/Proyectos/caripela_detection/
