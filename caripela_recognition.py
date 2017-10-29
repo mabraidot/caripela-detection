@@ -16,6 +16,7 @@ from FPS.VideoStream import VideoStream
 ###-------------------------------------------------###
 usarPiCam = True               # Está corriendo en Raspberry Pi con piCamera?
 windows = False		            # Está corriendo en windows?
+rotacion = 180                  # Rotar la cámara N grados
 cantidad_fotos = 20	            # Cantidad de fotos que se le tomarán a los desconocidos
 intervalo = 8			        # Intervalo de tiempo para tomar cada foto (frames por segundo)
 fotos_tomadas = 0		        # Contador de fotos capturadas
@@ -192,7 +193,7 @@ mostrar el menú de opciones
 inicio()
 
 # Inicializamos la cámara
-camara = VideoStream(src=camIndex, usePiCamera=usarPiCam, resolution=resolucion).start()
+camara = VideoStream(src=camIndex, usePiCamera=usarPiCam, resolution=resolucion, rotation=rotacion).start()
 #camara = WebcamVideoStream(src=camIndex).start()
 sleep(2)
 # Mientras el programa está corriendo, mostramos en pantalla la opción de salir
