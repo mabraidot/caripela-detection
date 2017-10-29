@@ -23,9 +23,9 @@ CARIPELA DETECTION
 **MODO DE USO EN RECONOCIMIENTO**
 * python caripela_recognition.py 
 
-*Este programa inicia la ventana de video solicitando que el usuario se ubique frente a la cámara para iniciar el reconocimiento. Solo tomará caras que tengan más de 250 px de ancho, por lo que el sujeto debe ubicarse relativamente cerca de la cámara.
+*Este programa inicia la ventana de video solicitando que el usuario se ubique frente a la cámara para iniciar el reconocimiento. Solo tomará caras que tengan más de 250 px de ancho, por lo que el sujeto debe ubicarse relativamente cerca de la cámara.*
 
-Si reconoce una cara, dibuja un recuadro donde está ubicada, e intenta identificarla usando el archivo de caras pre-entrenadas. Si ya estaba entrenada, es decir es una cara conocida, muestra el nombre de la persona en el recuadro, junto con el índice de confianza en la predicción (un número menor indica más confianza).
+*Si reconoce una cara, dibuja un recuadro donde está ubicada, e intenta identificarla usando el archivo de caras pre-entrenadas. Si ya estaba entrenada, es decir es una cara conocida, muestra el nombre de la persona en el recuadro, junto con el índice de confianza en la predicción (un número menor indica más confianza).
 Si no es una cara conocida, toma 20 fotos separadas por un número configurable de fotogramas, para luego utilizarlas en el programa de entrenamiento.*
 
 **MODO DE USO EN ENTRENAMIENTO**
