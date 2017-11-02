@@ -174,7 +174,7 @@ Función que presenta el menú en pantalla para iniciar el reconocimiento
 """
 def inicio():
     #espeak.decir("Parate frente a la cámara y presiona r para reconococer rostros, al finalizar presiona q para salir")
-    espeak.decir("Parate frente a la cámara y presiona r para reconococer rostros", "al finalizar presiona q para salir")
+    espeak.decir("Parate frente a la cámara y presioná erre para iniciar", "al finalizar presioná cu para salir")
     opcion = input('\nParate frente a la cámara y presioná (r: reconococer rostro), \nAl finalizar presioná (q: Salir del programa):')
     
     """

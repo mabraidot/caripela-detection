@@ -33,7 +33,7 @@ def menu():
     opciones['n'] = "Nuevo rostro"
     
     # Preparamos el texo del menú
-    espeak.decir("Si deseás actualizar el modelo de una persona que ya existía, seleccioná la opción con su nombre", "Si es una persona desconocida, presioná n para entrenar el modelo")
+    espeak.decir("Para actualizar una persona, seleccioná su número", "Si es una persona desconocida, presioná ene")
     texto_opciones = "\n\nSi deseás actualizar el modelo de una persona que ya existía, seleccioná la opción con su nombre.\nSi es una persona desconocida, presioná n para entrenar el modelo: \n\n"
     for id, texto in opciones.items():
         texto_opciones = texto_opciones + "(" + str(id) + ") " + texto + "\n"
@@ -46,7 +46,7 @@ def menu():
     # Si eligió nueva cara, usamos el próximo ID disponible y le pedimos al usuario
     # que ingrese el nombre de la nueva cara
     elif opcion == 'n':
-        espeak.decir("Ingresá el nombre de la persona y presioná Enter")
+        espeak.decir("Ingresá el nombre de la persona y presioná énter")
         nombre = input('\nIngresá el nombre de la persona y presioná <Enter>: ')
         id = int(etiqueta) + 1
         return id, nombre
