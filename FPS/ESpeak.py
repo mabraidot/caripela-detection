@@ -4,7 +4,6 @@ import sys, os
 
 class ESpeak:
     def __init__(self):
-        
 
     def decir(self, texto):
         # Comenzar el hilo e indicarle la función que ejecutará
@@ -12,5 +11,5 @@ class ESpeak:
         return self
 
     def update(self, texto):
-	os.system('espeak -ves+f1 -s130 "'+texto+'" 2>/dev/null')
+	os.system('espeak -ves+f4 -s120 "'+texto+'" 2>/dev/null')
 
