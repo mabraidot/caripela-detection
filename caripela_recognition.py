@@ -4,6 +4,7 @@ from time import sleep
 import cv2
 import numpy as np
 from FPS.VideoStream import VideoStream
+from FPS.ESpeak import ESpeak
 
 # En Linux parece haber un problema con libv4l y se necesita recargarla
 #from os import environ
@@ -16,7 +17,7 @@ from FPS.VideoStream import VideoStream
 ###-------------------------------------------------###
 usarPiCam = True               # Está corriendo en Raspberry Pi con piCamera?
 windows = False		            # Está corriendo en windows?
-rotacion = 180                  # Rotar la cámara N grados
+rotacion = 0                  # Rotar la cámara N grados
 cantidad_fotos = 20	            # Cantidad de fotos que se le tomarán a los desconocidos
 intervalo = 8			        # Intervalo de tiempo para tomar cada foto (frames por segundo)
 fotos_tomadas = 0		        # Contador de fotos capturadas
@@ -174,7 +175,8 @@ def buscarCaras(imagen):
 Función que presenta el menú en pantalla para iniciar el reconocimiento
 """
 def inicio():
-    os.system('espeak -ves+f1 -s130 "c Parate frente a la cámara y presiona r para reconococer rostros, al finalizar presiona q para salir" 2>/dev/null')
+    #os.system('espeak -ves+f1 -s130 "c Parate frente a la cámara y presiona r para reconococer rostros, al finalizar presiona q para salir" 2>/dev/null')
+    espeak.decir("Parate frente a la cámara y presiona r para reconococer rostros, al finalizar presiona q para salir")
     opcion = input('\nParate frente a la cámara y presioná (r: reconococer rostro), \nAl finalizar presioná (q: Salir del programa):')
     
     """
@@ -194,6 +196,8 @@ mostrar el menú de opciones
 """
 inicio()
 
+# Inicializamos el motor de habla
+espeak = ESpeak()
 # Inicializamos la cámara
 camara = VideoStream(src=camIndex, usePiCamera=usarPiCam, resolution=resolucion, rotation=rotacion).start()
 #camara = WebcamVideoStream(src=camIndex).start()
