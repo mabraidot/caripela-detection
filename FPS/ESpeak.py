@@ -11,5 +11,5 @@ class ESpeak:
     def update(self, texto, continuacion=None):
         os.system('espeak -ves+f4 -s120 "'+texto+'" 2>/dev/null')
         if(continuacion is not None):
-                os.system('espeak -ves+f4 -s120 "'+texto+'" 2>/dev/null')
+                os.system('espeak -ves+f4 -s120 "'+continuacion+'" 2>/dev/null')
 
