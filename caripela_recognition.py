@@ -64,6 +64,9 @@ with open('conocidos.csv','r') as f:
         nombres[int(id)] = str(nombre).rstrip('\n').strip().strip('"')
 
 
+# Inicializamos el motor de habla
+espeak = ESpeak()
+
 """
 Función que recibe una imágen con un rostro capturado, Intenta identificarlo 
 con datos del entrenamiento y devuelve su nombre si tiene éxito o False si no.
@@ -175,7 +178,6 @@ def buscarCaras(imagen):
 Función que presenta el menú en pantalla para iniciar el reconocimiento
 """
 def inicio():
-    #os.system('espeak -ves+f1 -s130 "c Parate frente a la cámara y presiona r para reconococer rostros, al finalizar presiona q para salir" 2>/dev/null')
     espeak.decir("Parate frente a la cámara y presiona r para reconococer rostros, al finalizar presiona q para salir")
     opcion = input('\nParate frente a la cámara y presioná (r: reconococer rostro), \nAl finalizar presioná (q: Salir del programa):')
     
@@ -196,8 +198,6 @@ mostrar el menú de opciones
 """
 inicio()
 
-# Inicializamos el motor de habla
-espeak = ESpeak()
 # Inicializamos la cámara
 camara = VideoStream(src=camIndex, usePiCamera=usarPiCam, resolution=resolucion, rotation=rotacion).start()
 #camara = WebcamVideoStream(src=camIndex).start()
