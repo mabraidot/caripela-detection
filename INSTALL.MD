@@ -3,7 +3,7 @@ CARIPELA DETECTION - INSTALACION
 
 **INSTALACION DE OPENCV EN RASPBERRY PI 3**
 
-* Expandir el filesystem
+* Expandir el filesystem para que use todo el espacio disponible de la tarjeta SD
 ~~~
 $ sudo raspi-config
 $ sudo reboot
@@ -136,4 +136,42 @@ $ python
 $ source ~/.profile
 $ workon cv3
 $ pip install "picamera[array]"
+~~~
+
+
+**INSTALACION DE LA LIBRERÍA DE TEXTO A SÍNTESIS DE VOZ**
+
+* Instalar eSpeak
+~~~
+$ sudo apt-get install alsa-utils
+$ sudo apt-get install espeak
+~~~
+
+* Editar el archivo **/etc/modules/**
+~~~
+$ sudo nano /etc/modules
+~~~
+
+* Agregar lo siguiente al final, si no existe
+~~~
+snd_bcm2835
+~~~
+
+* Instalar **mplayer**
+~~~
+$ sudo apt-get install mplayer
+~~~
+
+* Editar el archivo de configuración de mplayer
+~~~
+$ sudo nano /etc/mplayer/mplayer.conf
+~~~
+* Agregar lo siguiente al final
+~~~
+nolirc=yes
+~~~
+
+* Comprobar el funcionamiento
+~~~
+$ espeak -ves+f4 "Esto es una prueba"
 ~~~
