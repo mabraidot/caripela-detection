@@ -6,11 +6,6 @@ import numpy as np
 from FPS.VideoStream import VideoStream
 from FPS.ESpeak import ESpeak
 
-# En Linux parece haber un problema con libv4l y se necesita recargarla
-#from os import environ
-#env = dict(environ)
-#env['LD_PRELOAD'] = '/usr/lib/arm-linux-gnueabihf/libv4l/v4l2convert.so'
-
 
 ###-------------------------------------------------###
 ###                 CONFIGURACIONES                 ###
@@ -178,7 +173,8 @@ def buscarCaras(imagen):
 Función que presenta el menú en pantalla para iniciar el reconocimiento
 """
 def inicio():
-    espeak.decir("Parate frente a la cámara y presiona r para reconococer rostros, al finalizar presiona q para salir")
+    #espeak.decir("Parate frente a la cámara y presiona r para reconococer rostros, al finalizar presiona q para salir")
+    espeak.decir("Parate frente a la cámara y presiona r para reconococer rostros", "al finalizar presiona q para salir")
     opcion = input('\nParate frente a la cámara y presioná (r: reconococer rostro), \nAl finalizar presioná (q: Salir del programa):')
     
     """
