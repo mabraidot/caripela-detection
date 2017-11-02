@@ -7,9 +7,9 @@ from FPS.WebcamVideoStream import WebcamVideoStream
 
 
 # En Linux parece haber un problema con libv4l y se necesita recargarla
-from os import environ
-env = dict(environ)
-env['LD_PRELOAD'] = '/usr/lib/arm-linux-gnueabihf/libv4l/v4l2convert.so'
+#from os import environ
+#env = dict(environ)
+#env['LD_PRELOAD'] = '/usr/lib/arm-linux-gnueabihf/libv4l/v4l2convert.so'
 
 """
 Función que genera el menú de opciones que guía al usuario para realizar el entrenamiento.
