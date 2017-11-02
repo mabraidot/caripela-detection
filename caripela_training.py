@@ -129,6 +129,7 @@ def entrenar():
         
     # Si no hay imágenes en el directorio, mostramos el error y cerramos el programa
     else:
+        os.system('espeak -ves+f1 -s130 "c No hay imágenes disponibles para realizar el entrenamiento" 2>/dev/null')
         print(u"\n\nNo hay imágenes disponibles para realizar el entrenamiento.\n\n")
     exit()
 

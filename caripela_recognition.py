@@ -174,7 +174,9 @@ def buscarCaras(imagen):
 Función que presenta el menú en pantalla para iniciar el reconocimiento
 """
 def inicio():
+    os.system('espeak -ves+f1 -s130 "c Parate frente a la cámara y presiona r para reconococer rostros, al finalizar presiona q para salir" 2>/dev/null')
     opcion = input('\nParate frente a la cámara y presioná (r: reconococer rostro), \nAl finalizar presioná (q: Salir del programa):')
+    
     """
     Si el usuario presionó la letra r, salimos de la función para que el programa 
     continúe y entre en el bucle (while) principal. Si es otra letra, la función
