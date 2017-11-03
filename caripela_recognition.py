@@ -81,7 +81,7 @@ def esUnaCaraConocida(imagen):
     if not imagen is None and (w > 0 and h > 0) and len(nombres) > 0:
         prediccion = modelo.predict(imagen)
         if prediccion[1] < umbral_reconocimiento and nombres[int(prediccion[0])]:
-            nombrePronunciado = nombres[int(prediccion[0])
+            nombrePronunciado = nombres[int(prediccion[0])]
             return '{} - {:04.1f}'.format(nombres[int(prediccion[0])], prediccion[1])
             #return '{}'.format(nombres[int(prediccion[0])])
     return False
@@ -172,6 +172,7 @@ def buscarCaras(imagen):
         tiempoTranscurridoPronunciacion = 0
     else:
         tiempoTranscurridoPronunciacion += 1
+        nombrePronunciado = ""
 
     # Mostramos cada cuadro en la ventana de video
     cv2.imshow('Video', imagen)
