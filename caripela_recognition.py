@@ -31,6 +31,9 @@ umbral_desconocidos = 7         # Cantidad de caras desconocidas que tienen que 
 tolerancia_desconocidos = {}
 nombreConocido = {}
 nombreCaraConocida = {}
+nombrePronunciado = ""
+tiempoNombrePronunciado = 20  # Segundos transcurridos desde la ultima pronunciación de nombre
+tiempoTranscurridoPronunciacion = 0
 ###-------------------------------------------------###
 
 
@@ -67,7 +70,7 @@ Función que recibe una imágen con un rostro capturado, Intenta identificarlo
 con datos del entrenamiento y devuelve su nombre si tiene éxito o False si no.
 """
 def esUnaCaraConocida(imagen):
-    global umbral_reconocimiento
+    global umbral_reconocimiento, nombrePronunciado
     
     """
     Si la imágen existe, intentamos identificarla usando el algoritmo 
@@ -78,6 +81,7 @@ def esUnaCaraConocida(imagen):
     if not imagen is None and (w > 0 and h > 0) and len(nombres) > 0:
         prediccion = modelo.predict(imagen)
         if prediccion[1] < umbral_reconocimiento and nombres[int(prediccion[0])]:
+            nombrePronunciado = nombres[int(prediccion[0])
             return '{} - {:04.1f}'.format(nombres[int(prediccion[0])], prediccion[1])
             #return '{}'.format(nombres[int(prediccion[0])])
     return False
@@ -92,7 +96,7 @@ def buscarCaras(imagen):
     
     global fotos_tomadas, tiempo_transcurrido, intervalo, cantidad_fotos
     global margen_marco, umbral_desconocidos, tolerancia_desconocidos, nombreConocido
-    global tamanio_reconocimiento
+    global tamanio_reconocimiento, nombrePronunciado, tiempoNombrePronunciado, tiempoTranscurridoPronunciacion
     # Pasamos la imágen a escala de grises, el algoritmo de reconocimiento lo requiere así
     grices = imagen.copy()
     grices = cv2.cvtColor(grices, cv2.COLOR_BGR2GRAY)
@@ -148,11 +152,12 @@ def buscarCaras(imagen):
                     texto = str("Desconocido "+str(indiceCara)+" - Foto "+str(fotos_tomadas))
                     nombreConocido[indiceCara] = False
                     tiempo_transcurrido += 1
+                    nombrePronunciado = "Desconocido"
 
             if nombreConocido[indiceCara]:
                 # Si es un rostro conocido, tomamos el nombre para mostrar en el recuadro
                 texto = str(nombreConocido[indiceCara])
-            
+                
             # Dibujamos el recuadro sobre la cara y colocamos la etiqueta con el nombre conocido 
             # o una indicación de que no es un rostro conocido
             cv2.rectangle(imagen, (x+margen_marco, y+margen_marco), (x+w-margen_marco, y+h-margen_marco), (0, 255, 0), 2)
@@ -161,6 +166,12 @@ def buscarCaras(imagen):
             cv2.putText(imagen, texto, (x+margen_marco+5, y+margen_marco+15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255),2)
 
             indiceCara += 1
+
+    if(nombrePronunciado != "" and tiempoTranscurridoPronunciacion >= tiempoNombrePronunciado):
+        espeak.decir(nombrePronunciado)
+        tiempoTranscurridoPronunciacion = 0
+    else:
+        tiempoTranscurridoPronunciacion += 1
 
     # Mostramos cada cuadro en la ventana de video
     cv2.imshow('Video', imagen)
