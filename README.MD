@@ -7,7 +7,7 @@ CARIPELA DETECTION
 **ESTRUCTURA DE ARCHIVOS Y DIRECTORIOS**
 * **/Caras/**: Almacena las imágenes tomadas por la cámara, que se utilizarán para entrenar al algoritmo de reconocimiento.
 * **/FPS/**: Librería para utilizar el resto de los núcleos del procesador.
-* **/haar/**: Archivos preentrenador para reconocer una cara dentro de una imágen.
+* **/haar/**: Archivos pre-entrenados para reconocer una cara dentro de una imagen.
 * **/caripela_recognition.py**: Intenta reconocer e identificar una cara dentro del video. Si no es conocida, le toma fotos para usar en el algoritmo de entrenamiento.
 * **/caripela_training.py**: Si hay fotos de una persona desconocida, las usa para entrenar al algoritmo de identificación.
 * **/conocidos.xml**: Almacena las características de las caras pre-entrenadas que utilizará el algoritmo de identificación.
@@ -31,4 +31,4 @@ Si no es una cara conocida, toma 20 fotos separadas por un número configurable 
 **MODO DE USO EN ENTRENAMIENTO**
 * python caripela_training.py 
 
-*Toma las fotos ubicadas en el directorio __Caras__, y solicita al usuario que indique si se va a realizar una actualización del entrenamiento de una cara conocida, o se se va a agregar un a nueva cara. En este caso se solicitará el nombre de la persona a reconocer.*
+*Toma las fotos ubicadas en el directorio __Caras__, y solicita al usuario que indique si se va a realizar una actualización del entrenamiento de una cara conocida, o se va a agregar un a nueva cara. En este caso se solicitará el nombre de la persona a reconocer.*
