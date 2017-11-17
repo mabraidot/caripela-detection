@@ -4,14 +4,17 @@ from time import sleep
 import cv2
 import numpy as np
 from FPS.VideoStream import VideoStream
-from FPS.ESpeak import ESpeak
+
+hablar = False
+if hablar:
+    from FPS.ESpeak import ESpeak
 
 
 ###-------------------------------------------------###
 ###                 CONFIGURACIONES                 ###
 ###-------------------------------------------------###
-usarPiCam = True               # Está corriendo en Raspberry Pi con piCamera?
-windows = False		            # Está corriendo en windows?
+usarPiCam = False               # Está corriendo en Raspberry Pi con piCamera?
+windows = True		            # Está corriendo en windows?
 rotacion = 0                  # Rotar la cámara N grados
 cantidad_fotos = 20	            # Cantidad de fotos que se le tomarán a los desconocidos
 intervalo = 8			        # Intervalo de tiempo para tomar cada foto (frames por segundo)
@@ -63,7 +66,8 @@ with open('conocidos.csv','r') as f:
 
 
 # Inicializamos el motor de habla
-espeak = ESpeak()
+if hablar:
+    espeak = ESpeak()
 
 """
 Función que recibe una imágen con un rostro capturado, Intenta identificarlo 
@@ -94,7 +98,7 @@ pre-entrenado, si es una cara conocida, imprime el nombre de la persona en el re
 """
 def buscarCaras(imagen):
     
-    global fotos_tomadas, tiempo_transcurrido, intervalo, cantidad_fotos
+    global fotos_tomadas, tiempo_transcurrido, intervalo, cantidad_fotos, hablar
     global margen_marco, umbral_desconocidos, tolerancia_desconocidos, nombreConocido
     global tamanio_reconocimiento, nombrePronunciado, tiempoNombrePronunciado, tiempoTranscurridoPronunciacion
     # Pasamos la imágen a escala de grises, el algoritmo de reconocimiento lo requiere así
@@ -168,7 +172,8 @@ def buscarCaras(imagen):
             indiceCara += 1
 
     if(nombrePronunciado != "" and tiempoTranscurridoPronunciacion >= tiempoNombrePronunciado):
-        espeak.decir(nombrePronunciado)
+        if hablar:
+            espeak.decir(nombrePronunciado)
         tiempoTranscurridoPronunciacion = 0
     else:
         tiempoTranscurridoPronunciacion += 1
@@ -185,8 +190,8 @@ def buscarCaras(imagen):
 Función que presenta el menú en pantalla para iniciar el reconocimiento
 """
 def inicio():
-    #espeak.decir("Parate frente a la cámara y presiona r para reconococer rostros, al finalizar presiona q para salir")
-    espeak.decir("Parate frente a la cámara y presioná erre para iniciar", "al finalizar presioná cu para salir")
+    if hablar:
+        espeak.decir("Parate frente a la cámara y presioná erre para iniciar", "al finalizar presioná cu para salir")
     opcion = input('\nParate frente a la cámara y presioná (r: reconococer rostro), \nAl finalizar presioná (q: Salir del programa):')
     
     """

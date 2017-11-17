@@ -7,7 +7,9 @@ from FPS.WebcamVideoStream import WebcamVideoStream
 from FPS.ESpeak import ESpeak
 
 # Inicializamos el motor de habla
-espeak = ESpeak()
+hablar = False
+if hablar:
+    espeak = ESpeak()
 
 """
 Función que genera el menú de opciones que guía al usuario para realizar el entrenamiento.
@@ -17,7 +19,7 @@ con una cara nueva.
 opciones = {}
 def menu():
 
-    global opciones
+    global opciones, hablar
 
     (nombres, id) = ({}, 0)
     etiqueta = -1
@@ -33,7 +35,8 @@ def menu():
     opciones['n'] = "Nuevo rostro"
     
     # Preparamos el texo del menú
-    espeak.decir("Para actualizar una persona, seleccioná su número", "Si es una persona desconocida, presioná ene")
+    if hablar:
+        espeak.decir("Para actualizar una persona, seleccioná su número", "Si es una persona desconocida, presioná ene")
     texto_opciones = "\n\nSi deseás actualizar el modelo de una persona que ya existía, seleccioná la opción con su nombre.\nSi es una persona desconocida, presioná n para entrenar el modelo: \n\n"
     for id, texto in opciones.items():
         texto_opciones = texto_opciones + "(" + str(id) + ") " + texto + "\n"
@@ -46,7 +49,8 @@ def menu():
     # Si eligió nueva cara, usamos el próximo ID disponible y le pedimos al usuario
     # que ingrese el nombre de la nueva cara
     elif opcion == 'n':
-        espeak.decir("Ingresá el nombre de la persona y presioná énter")
+        if hablar:
+            espeak.decir("Ingresá el nombre de la persona y presioná énter")
         nombre = input('\nIngresá el nombre de la persona y presioná <Enter>: ')
         id = int(etiqueta) + 1
         return id, nombre
@@ -58,7 +62,8 @@ def menu():
         return id, nombre
     # Si no eligió alguna de las anteriores, mostramos mensaje de error y cerramos el programa
     else:
-        espeak.decir("Opción no válida")
+        if hablar:
+            espeak.decir("Opción no válida")
         print(u"Opción no válida.")
         exit()
 
@@ -71,7 +76,7 @@ archivo xml de caras conocidas
 """
 def entrenar():
     
-    global opciones
+    global opciones, hablar
     
     # Inicializamos algunas variables
     (imagenes, etiquetas, nombres, id) = ([], [], {}, 0)
@@ -124,15 +129,18 @@ def entrenar():
             csv_nombres.write(str(id)+', "'+nombre+'"\n')
             csv_nombres.close()
             print(u'Entrenando la nueva cara de ' + nombre)
-            espeak.decir("Entrenando la nueva cara de " + nombre)
+            if hablar:
+                espeak.decir("Entrenando la nueva cara de " + nombre)
         else:
             print(u'Actualizando la cara de ' + nombre)
-            espeak.decir("Actualizando la cara de " + nombre)
+            if hablar:
+                espeak.decir("Actualizando la cara de " + nombre)
         
         
     # Si no hay imágenes en el directorio, mostramos el error y cerramos el programa
     else:
-        espeak.decir("No hay imágenes disponibles para realizar el entrenamiento")
+        if hablar:
+            espeak.decir("No hay imágenes disponibles para realizar el entrenamiento")
         print(u"\n\nNo hay imágenes disponibles para realizar el entrenamiento.\n\n")
     exit()
 
